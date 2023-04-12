@@ -10,16 +10,16 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress> {
   try {
     const { data } = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
 
-    if (data.erro) {
-      throw notFoundError();
-    }
+    if (data.erro) throw notFoundError();
+
+    const { complemento, logradouro, localidade, bairro, uf } = data;
 
     return {
-      complemento: data.complemento,
-      logradouro: data.logradouro,
-      cidade: data.localidade,
-      bairro: data.bairro,
-      uf: data.uf,
+      uf,
+      bairro,
+      logradouro,
+      complemento,
+      cidade: localidade,
     };
   } catch {
     throw invalidDataError(['invalid CEP']);
