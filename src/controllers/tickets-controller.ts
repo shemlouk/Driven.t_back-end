@@ -22,3 +22,16 @@ export const getUserTickets = async (req: AuthenticatedRequest, res: Response) =
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 };
+
+export const createTicket = async (req: AuthenticatedRequest, res: Response) => {
+  const {
+    userId,
+    body: { ticketTypeId },
+  } = req;
+  try {
+    const ticketCreated = await ticketsService.createTicket(userId, ticketTypeId);
+    return res.status(httpStatus.CREATED).send(ticketCreated);
+  } catch (error) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+};
