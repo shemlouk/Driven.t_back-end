@@ -25,6 +25,10 @@ const createTicket = async (userId: number, ticketTypeId: number) => {
   return await ticketsRepository.create(data);
 };
 
-const ticketsService = { getAllTicketTypes, getAllTicketsFromUserId, createTicket };
+const getTicketByIdWithEnrollment = async (id: number) => {
+  return await ticketsRepository.findTicketById(id, { Enrollment: true });
+};
+
+const ticketsService = { getAllTicketTypes, getAllTicketsFromUserId, createTicket, getTicketByIdWithEnrollment };
 
 export default ticketsService;
