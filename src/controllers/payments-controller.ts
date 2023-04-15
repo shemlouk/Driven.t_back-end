@@ -17,3 +17,14 @@ export const getTicketPaymentDetails = async (req: AuthenticatedRequest, res: Re
     return res.sendStatus(httpStatus.UNAUTHORIZED);
   }
 };
+
+export const createPayment = async (req: AuthenticatedRequest, res: Response) => {
+  const { userId } = req;
+  try {
+    const createdPayment = await paymentsService.createPayment(userId, req.body);
+    res.send(createdPayment);
+  } catch (error) {
+    if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
+    return res.sendStatus(httpStatus.UNAUTHORIZED);
+  }
+};
