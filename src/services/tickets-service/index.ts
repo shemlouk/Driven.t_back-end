@@ -25,10 +25,20 @@ const createTicket = async (userId: number, ticketTypeId: number) => {
   return await ticketsRepository.create(data);
 };
 
-const getTicketByIdWithEnrollment = async (id: number) => {
-  return await ticketsRepository.findTicketById(id, { Enrollment: true });
+const getExtendedTicketById = async (id: number) => {
+  return await ticketsRepository.findTicketById(id, { Enrollment: true, Payment: true, TicketType: true });
 };
 
-const ticketsService = { getAllTicketTypes, getAllTicketsFromUserId, createTicket, getTicketByIdWithEnrollment };
+const updateTicketStatusToPaid = async (id: number) => {
+  return await ticketsRepository.updateTicketStatusById(id, 'PAID');
+};
+
+const ticketsService = {
+  getAllTicketTypes,
+  getAllTicketsFromUserId,
+  createTicket,
+  getExtendedTicketById,
+  updateTicketStatusToPaid,
+};
 
 export default ticketsService;

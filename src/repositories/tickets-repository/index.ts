@@ -1,4 +1,4 @@
-import { Enrollment, Payment, Prisma, Ticket, TicketType } from '@prisma/client';
+import { Enrollment, Payment, Prisma, Ticket, TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
 
 type TicketRelatedModels = Partial<{ Enrollment: Enrollment; TicketType: TicketType; Payment: Payment }>;
@@ -29,6 +29,10 @@ const findTicketById = async (id: number, include?: Prisma.TicketInclude): Promi
   return prisma.ticket.findUnique(params);
 };
 
-const ticketsRepository = { findTicketTypes, findTicketsFromUserId, create, findTicketById };
+const updateTicketStatusById = async (id: number, status: TicketStatus) => {
+  return prisma.ticket.update({ where: { id }, data: { status } });
+};
+
+const ticketsRepository = { findTicketTypes, findTicketsFromUserId, create, findTicketById, updateTicketStatusById };
 
 export default ticketsRepository;
