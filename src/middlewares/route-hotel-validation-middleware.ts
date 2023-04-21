@@ -9,8 +9,6 @@ export const routeHotelValidationMiddleware = async (req: AuthenticatedRequest, 
   try {
     const [userTicket] = await ticketsService.getAllTicketsFromUserId(userId);
 
-    if (!userTicket) return res.sendStatus(httpStatus.NOT_FOUND);
-
     const isNotPaid = userTicket.status !== 'PAID';
     const isRemote = userTicket.TicketType.isRemote;
     const doesNotIncludesHotel = !userTicket.TicketType.includesHotel;
@@ -19,6 +17,7 @@ export const routeHotelValidationMiddleware = async (req: AuthenticatedRequest, 
 
     next();
   } catch (error) {
-    next(error);
+    if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
+    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 };
