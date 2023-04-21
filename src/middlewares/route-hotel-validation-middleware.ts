@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { AuthenticatedRequest } from './authentication-middleware';
 import ticketsService from '@/services/tickets-service';
 
-const routeHotelValidationMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const routeHotelValidationMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const { userId } = req;
 
   try {
@@ -22,5 +22,3 @@ const routeHotelValidationMiddleware = async (req: AuthenticatedRequest, res: Re
     next(error);
   }
 };
-
-export default routeHotelValidationMiddleware;
