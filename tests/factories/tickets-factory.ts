@@ -4,13 +4,15 @@ import { prisma } from '@/config';
 
 type CreateTicketTypeParams = Partial<{ isRemote: boolean; includesHotel: boolean }>;
 
-export async function createTicketType(options?: CreateTicketTypeParams) {
+export async function createTicketType(options: CreateTicketTypeParams = {}) {
+  const { isRemote, includesHotel } = options;
+
   return prisma.ticketType.create({
     data: {
       name: faker.name.findName(),
       price: faker.datatype.number(),
-      isRemote: options.isRemote ?? faker.datatype.boolean(),
-      includesHotel: options.includesHotel ?? faker.datatype.boolean(),
+      isRemote: isRemote ?? faker.datatype.boolean(),
+      includesHotel: includesHotel ?? faker.datatype.boolean(),
     },
   });
 }
