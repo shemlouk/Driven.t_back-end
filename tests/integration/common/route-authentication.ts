@@ -9,7 +9,7 @@ const server = supertest(app);
 type HttpMethod = 'get' | 'post' | 'put' | 'patch';
 
 const describeRouteAuthentication = (route: string, method: HttpMethod) => {
-  describe('when authorization is invalid', () => {
+  describe('when token is invalid', () => {
     it('should respond with status 401 if no token is sent', async () => {
       const response = await server[method](route);
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
