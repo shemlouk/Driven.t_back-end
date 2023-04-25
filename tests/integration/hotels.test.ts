@@ -1,15 +1,8 @@
-import { Hotel, TicketStatus, User } from '@prisma/client';
+import { Hotel, TicketStatus } from '@prisma/client';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { generateValidToken, cleanDb } from '../helpers';
-import {
-  createEnrollmentWithAddress,
-  createHotel,
-  createRoom,
-  createTicket,
-  createTicketType,
-  createUser,
-} from '../factories';
+import { createTicketContext, createHotelAndRoom, createUser } from '../factories';
 import describeRouteAuthentication from './common/route-authentication';
 import app, { init } from '@/app';
 import { HotelWithRooms } from '@/repositories/hotels-repository';
@@ -18,25 +11,6 @@ beforeAll(async () => await init());
 beforeEach(async () => await cleanDb());
 
 const server = supertest(app);
-
-type TicketTypeConfigParam = Partial<{ isRemote: boolean; includesHotel: boolean; status: TicketStatus }>;
-
-const defaultConfigParam = { isRemote: false, includesHotel: true, status: TicketStatus.PAID };
-
-const createTicketContext = async (user: User, config: TicketTypeConfigParam = defaultConfigParam): Promise<void> => {
-  const { isRemote = false, includesHotel = true, status = TicketStatus.PAID } = config;
-
-  const { id: enrollmentId } = await createEnrollmentWithAddress(user);
-  const { id: ticketTypeId } = await createTicketType({ isRemote, includesHotel });
-
-  await createTicket(enrollmentId, ticketTypeId, status);
-};
-
-const createHotelAndRoom = async () => {
-  const hotel = await createHotel();
-  const room = await createRoom(hotel.id);
-  return { hotel, room };
-};
 
 describe('GET /hotels', () => {
   describeRouteAuthentication('/hotels', 'get');
