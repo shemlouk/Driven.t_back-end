@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { authenticateToken } from '@/middlewares';
-import { getUserBooking } from '@/controllers';
+import { authenticateToken, ticketValidationMiddleware, validateBody } from '@/middlewares';
+import { bookRoom, getUserBooking } from '@/controllers';
+import { bookingSchema } from '@/schemas';
 
 const bookingRouter = Router();
 
-bookingRouter.all('/*', authenticateToken).get('/', getUserBooking).post('/').put('/:bookingId');
+bookingRouter
+  .all('/*', authenticateToken)
+  .get('/', getUserBooking)
+  .post('/', ticketValidationMiddleware(), validateBody(bookingSchema), bookRoom)
+  .put('/:bookingId');
 
 export { bookingRouter };

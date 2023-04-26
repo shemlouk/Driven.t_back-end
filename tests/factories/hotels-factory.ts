@@ -12,8 +12,8 @@ export const createRoom = async (hotelId: number, params: Partial<Room> = {}): P
   return prisma.room.create({ data: { name, capacity, hotelId } });
 };
 
-export const createHotelAndRoom = async () => {
+export const createHotelAndRoom = async (roomParams: Partial<Room> = {}) => {
   const hotel = await createHotel();
-  const room = await createRoom(hotel.id);
+  const room = await createRoom(hotel.id, roomParams);
   return { hotel, room };
 };

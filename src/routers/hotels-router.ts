@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import Joi from 'joi';
-import { authenticateToken, routeHotelValidationMiddleware, validateParams } from '@/middlewares';
+import httpStatus from 'http-status';
+import { authenticateToken, ticketValidationMiddleware, validateParams } from '@/middlewares';
 import { getHotels, getRoomsFromHotel } from '@/controllers';
 
 const hotelsRouter = Router();
 
 hotelsRouter
-  .all('/*', authenticateToken, routeHotelValidationMiddleware)
+  .all('/*', authenticateToken, ticketValidationMiddleware(httpStatus.PAYMENT_REQUIRED))
   .get('/', getHotels)
   .get(
     '/:hotelId',

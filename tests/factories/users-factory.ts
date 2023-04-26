@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import faker from '@faker-js/faker';
 import { User } from '@prisma/client';
+import { generateValidToken } from '../helpers';
 import { prisma } from '@/config';
 
 export async function createUser(params: Partial<User> = {}): Promise<User> {
@@ -14,3 +15,9 @@ export async function createUser(params: Partial<User> = {}): Promise<User> {
     },
   });
 }
+
+export const createUserAndToken = async () => {
+  const user = await createUser();
+  const token = await generateValidToken(user);
+  return { user, token };
+};
