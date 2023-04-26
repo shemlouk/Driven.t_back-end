@@ -31,6 +31,9 @@ describe('GET /booking', () => {
       const { room } = await createHotelAndRoom();
       await createTicketContext(user);
 
+      delete room.updatedAt;
+      delete room.createdAt;
+
       const { id } = await createBooking({ userId: user.id, roomId: room.id });
 
       const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
