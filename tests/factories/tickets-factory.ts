@@ -1,5 +1,6 @@
 import faker from '@faker-js/faker';
-import { TicketStatus } from '@prisma/client';
+import { TicketStatus, User } from '@prisma/client';
+import { createEnrollmentWithAddress } from './enrollments-factory';
 import { prisma } from '@/config';
 
 type CreateTicketTypeParams = Partial<{ isRemote: boolean; includesHotel: boolean }>;
@@ -48,3 +49,19 @@ export async function createTicketTypeWithHotel() {
     },
   });
 }
+
+type TicketTypeConfigParam = Partial<{ isRemote: boolean; includesHotel: boolean; status: TicketStatus }>;
+
+const defaultConfigParam = { isRemote: false, includesHotel: true, status: TicketStatus.PAID };
+
+export const createTicketContext = async (
+  user: User,
+  config: TicketTypeConfigParam = defaultConfigParam,
+): Promise<void> => {
+  const { isRemote = false, includesHotel = true, status = TicketStatus.PAID } = config;
+
+  const { id: enrollmentId } = await createEnrollmentWithAddress(user);
+  const { id: ticketTypeId } = await createTicketType({ isRemote, includesHotel });
+
+  await createTicket(enrollmentId, ticketTypeId, status);
+};

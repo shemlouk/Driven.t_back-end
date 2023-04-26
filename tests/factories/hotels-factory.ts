@@ -11,3 +11,9 @@ export const createRoom = async (hotelId: number, params: Partial<Room> = {}): P
   const { name = faker.lorem.word(), capacity = Number(faker.random.numeric(1, { bannedDigits: ['0'] })) } = params;
   return prisma.room.create({ data: { name, capacity, hotelId } });
 };
+
+export const createHotelAndRoom = async () => {
+  const hotel = await createHotel();
+  const room = await createRoom(hotel.id);
+  return { hotel, room };
+};
