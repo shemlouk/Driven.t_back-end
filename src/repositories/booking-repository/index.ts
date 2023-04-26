@@ -10,6 +10,10 @@ const findByUserIdWithCustomSelection = async (
   return prisma.booking.findMany({ where: { userId }, select });
 };
 
-const bookingRepository = { findByUserIdWithCustomSelection };
+const create = async (data: Prisma.BookingUncheckedCreateInput) => {
+  return prisma.booking.create({ data });
+};
+
+const bookingRepository = { findByUserIdWithCustomSelection, create };
 
 export default bookingRepository;
