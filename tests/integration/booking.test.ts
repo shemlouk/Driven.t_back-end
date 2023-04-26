@@ -53,7 +53,7 @@ describe('POST /booking', () => {
           await createTicketContext(user);
           const { room } = await createHotelAndRoom();
           const payload = { roomId: room.id + 1 };
-          const response = await server.post('/booking').send(payload).set('Auhtorization', `Bearer ${token}`);
+          const response = await server.post('/booking').send(payload).set('Authorization', `Bearer ${token}`);
           expect(response.status).toBe(httpStatus.NOT_FOUND);
         });
 
@@ -73,14 +73,14 @@ describe('POST /booking', () => {
 
           const { user, token } = await createUserAndToken();
           await createTicketContext(user);
-          await server.post('/booking').send(payload).set('Auhtorization', `Bearer ${token}`);
+          await server.post('/booking').send(payload).set('Authorization', `Bearer ${token}`);
 
           const { user: anotherUser, token: tokenFromAnotherUser } = await createUserAndToken();
           await createTicketContext(anotherUser);
           const response = await server
             .post('/booking')
             .send(payload)
-            .set('Auhtorization', `Bearer ${tokenFromAnotherUser}`);
+            .set('Authorization', `Bearer ${tokenFromAnotherUser}`);
 
           expect(response.status).toBe(httpStatus.FORBIDDEN);
         });
