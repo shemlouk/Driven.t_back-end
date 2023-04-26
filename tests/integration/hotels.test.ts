@@ -4,6 +4,7 @@ import supertest from 'supertest';
 import { generateValidToken, cleanDb } from '../helpers';
 import { createTicketContext, createHotelAndRoom, createUser } from '../factories';
 import describeRouteAuthentication from './common/route-authentication';
+import describeTicketValidation from './common/ticket-validation';
 import app, { init } from '@/app';
 import { HotelWithRooms } from '@/repositories/hotels-repository';
 
@@ -24,38 +25,7 @@ describe('GET /hotels', () => {
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 402 if ticket is not paid', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { status: TicketStatus.RESERVED });
-
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
-
-    it('should respond with status 402 if ticket is remote', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { isRemote: true });
-
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
-
-    it('should respond with status 402 if ticket does not includes hotel', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { includesHotel: false });
-
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
+    describeTicketValidation('/hotels', 'get', httpStatus.PAYMENT_REQUIRED);
 
     describe('when ticket is valid', () => {
       it('should respond with status 404 if there is no hotels', async () => {
@@ -97,38 +67,7 @@ describe('GET /hotels/:hotelId', () => {
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
-    it('should respond with status 402 if ticket is not paid', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { status: TicketStatus.RESERVED });
-
-      const response = await server.get('/hotels/0').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
-
-    it('should respond with status 402 if ticket is remote', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { isRemote: true });
-
-      const response = await server.get('/hotels/0').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
-
-    it('should respond with status 402 if ticket does not includes hotel', async () => {
-      const user = await createUser();
-      const token = await generateValidToken(user);
-
-      await createTicketContext(user, { includesHotel: false });
-
-      const response = await server.get('/hotels/0').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
-    });
+    describeTicketValidation('/hotels/0', 'get', httpStatus.PAYMENT_REQUIRED);
 
     describe('when ticket is valid', () => {
       it('should respond with status 400 if hotel id sent is invalid', async () => {

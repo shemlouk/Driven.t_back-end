@@ -6,7 +6,7 @@ import app from '@/app';
 
 const server = supertest(app);
 
-type HttpMethod = 'get' | 'post' | 'put' | 'patch';
+export type HttpMethod = 'get' | 'post' | 'put' | 'patch';
 
 const describeRouteAuthentication = (route: string, method: HttpMethod) => {
   describe('when token is invalid', () => {
