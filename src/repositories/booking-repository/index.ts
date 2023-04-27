@@ -18,6 +18,14 @@ const findByRoomId = async (roomId: number) => {
   return prisma.booking.findMany({ where: { roomId } });
 };
 
-const bookingRepository = { findByUserIdWithCustomSelection, create, findByRoomId };
+const findById = async (id: number) => {
+  return prisma.booking.findUnique({ where: { id } });
+};
+
+const updateRoomId = async (id: number, roomId: number) => {
+  return prisma.booking.update({ where: { id }, data: { roomId } });
+};
+
+const bookingRepository = { findByUserIdWithCustomSelection, create, findByRoomId, updateRoomId, findById };
 
 export default bookingRepository;
