@@ -22,6 +22,9 @@ const createBooking = async (userId: number, roomId: number) => {
 };
 
 const updateRoom = async (bookingId: number, userId: number, roomId: number) => {
+  const userHasBooking = await bookingRepository.findByUserId(userId);
+  if (!userHasBooking) throw forbiddenError();
+
   await checkRoomAvailability(roomId);
 
   const booking = await bookingRepository.findById(bookingId);
