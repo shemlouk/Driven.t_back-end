@@ -20,3 +20,15 @@ export const bookRoom = async (req: AuthenticatedRequest, res: Response, next: N
     next(error);
   }
 };
+
+export const changeRoom = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const { userId } = req;
+  const { roomId } = req.body;
+  const id = Number(req.params.bookingId);
+  try {
+    const updatedBooking = await bookingService.updateRoom(id, userId, roomId);
+    return res.send(updatedBooking);
+  } catch (error) {
+    next(error);
+  }
+};
