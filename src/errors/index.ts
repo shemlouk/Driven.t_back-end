@@ -6,3 +6,4 @@ export * from './not-found-error';
 export * from './unauthorized-error';
 export * from './request-error';
 export * from './room-unavailable-error';
+export * from './forbidden-error';
