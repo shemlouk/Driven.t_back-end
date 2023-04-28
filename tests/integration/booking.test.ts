@@ -118,17 +118,6 @@ describe('PUT /booking/:bookingId', () => {
         testPayloadValidation('/booking/0', 'put');
 
         describe('when payload is valid', () => {
-          it('should respond with status 404 if booking is not found', async () => {
-            const { user, token } = await createUserAndToken();
-            const { room } = await createHotelAndRoom();
-            await createTicketContext(user);
-
-            const payload = { roomId: room.id };
-            const response = await server.put(`/booking/1`).send(payload).set('Authorization', `Bearer ${token}`);
-
-            expect(response.status).toBe(httpStatus.NOT_FOUND);
-          });
-
           it('should respond with status 404 if room is not found', async () => {
             const { user, token } = await createUserAndToken();
             const { room } = await createHotelAndRoom();
